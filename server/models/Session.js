@@ -14,6 +14,17 @@ const sessionSchema = new mongoose.Schema(
       required: true,
     },
 
+    role: {
+      type: String,
+      required: true,
+    },
+
+    difficulty: {
+      type: String,
+      enum: ["easy", "medium", "hard"],
+      required: true,
+    },
+
     status: {
       type: String,
       enum: ["active", "completed"],
