@@ -5,6 +5,7 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import sessionRoutes from "./routes/sessionRoutes.js";
 import questionRoutes from "./routes/questionRoutes.js";
+import summaryRoutes from "./routes/summaryRoutes.js";
 
 dotenv.config();
 
@@ -16,11 +17,11 @@ app.use(cors());
 app.use("/api/auth", authRoutes);
 app.use("/api/sessions", sessionRoutes);
 app.use("/api/questions", questionRoutes);
+app.use("/api/summary", summaryRoutes);
 
 connectDB()
   .then(() => {
-    app.listen(process.env.PORT, () => {
-    });
+    app.listen(process.env.PORT, () => {});
   })
   .catch((error) => {
     console.error("DB connection failed", error);
