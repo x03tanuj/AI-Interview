@@ -22,7 +22,6 @@ const getQuestionCategoryFromMode = (mode) => {
 };
 
 export const generateQuestionHandler = async (req, res) => {
-  console.log("USER:", req.user);
   try {
     const { sessionId } = req.body;
 
