@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import sessionRoutes from "./routes/sessionRoutes.js";
+import questionRoutes from "./routes/questionRoutes.js";
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ app.use(cors());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/sessions", sessionRoutes);
+app.use("/api/questions", questionRoutes);
 
 connectDB()
   .then(() => {
