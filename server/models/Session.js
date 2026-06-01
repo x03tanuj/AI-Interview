@@ -35,6 +35,7 @@ const sessionSchema = new mongoose.Schema(
       default: 0,
     },
     weakAreas: [String],
+    strongAreas: [String],
   },
   { timestamps: true },
 );

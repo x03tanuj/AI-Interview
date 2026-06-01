@@ -1,4 +1,6 @@
 import Session from "../models/Session.js";
+import Answer from "../models/Answer.js";
+import Question from "../models/Question.js";
 
 export const startSession = async (req, res) => {
   try {
@@ -78,6 +80,46 @@ export const endSession = async (req, res) => {
         .json({ success: false, message: "Not authorized" });
     }
 
+    const answers = await Answer.find({ sessionId: session._id });
+    const questions = await Question.find({ sessionId: session._id }).select(
+      "_id category",
+    );
+
+    const categoryByQuestionId = new Map(
+      questions.map((question) => [question._id.toString(), question.category]),
+    );
+
+    const scoredAnswers = answers
+      .map((answer) => ({
+        score: typeof answer.score === "number" ? answer.score : null,
+        category: categoryByQuestionId.get(answer.questionId.toString()),
+      }))
+      .filter((item) => item.score !== null && item.category);
+
+    const totalScore = scoredAnswers.reduce((sum, item) => sum + item.score, 0);
+    const overallScore = scoredAnswers.length
+      ? Number((totalScore / scoredAnswers.length).toFixed(2))
+      : 0;
+
+    const weakAreas = [
+      ...new Set(
+        scoredAnswers
+          .filter((item) => item.score < 5)
+          .map((item) => item.category),
+      ),
+    ];
+
+    const strongAreas = [
+      ...new Set(
+        scoredAnswers
+          .filter((item) => item.score >= 8)
+          .map((item) => item.category),
+      ),
+    ];
+
+    session.overallScore = overallScore;
+    session.weakAreas = weakAreas;
+    session.strongAreas = strongAreas;
     session.status = "completed";
     await session.save();
     res.status(200).json({
